@@ -1,0 +1,106 @@
+# Wire the Waitlist to a Google Sheet
+
+This is a zero-cost, no-backend setup. Every submission on the landing page lands in a Sheet you own. Takes about 5 minutes the first time.
+
+## What's already done (the code side)
+
+- `index.html` — `submitWL()` rewritten to POST the form data to a URL you'll paste in. Has loading state, duplicate-safe, and shows a network-error message if the POST fails.
+- `apps-script/Code.gs` — the server-side script that receives the POST and writes a row to your Sheet. De-duplicates by email. Adds headers on first run.
+
+## What you do (the Google side)
+
+### 1. Create the Sheet
+
+- Go to https://sheets.new (creates a blank sheet instantly, logged-in Google account).
+- Rename the file to `CitiMore Waitlist` (top-left, click the title).
+- Leave the default tab empty — the script creates the `Waitlist` tab on first submission.
+
+### 2. Open the Apps Script editor
+
+- In the Sheet's menu: **Extensions → Apps Script**.
+- A new tab opens with a file called `Code.gs` containing `function myFunction() {}`.
+
+### 3. Paste the script
+
+- Open `citimore-site/apps-script/Code.gs` from this project.
+- Select all, copy.
+- In the Apps Script editor, select all of the placeholder code, delete it, and paste ours in.
+- Click the floppy-disk **Save** icon (or `Cmd+S`). Name the project `CitiMore Waitlist API` when prompted.
+
+### 4. Deploy as a Web App
+
+- Top-right, click **Deploy → New deployment**.
+- Click the gear icon next to "Select type" → choose **Web app**.
+- Fill in:
+  - **Description:** `CitiMore waitlist endpoint`
+  - **Execute as:** `Me (your-email@gmail.com)`
+  - **Who has access:** `Anyone`  ← this is required so the public form can POST to it
+- Click **Deploy**.
+- First time only: Google asks you to authorize. Click **Authorize access** → pick your account → click **Advanced → Go to CitiMore Waitlist API (unsafe)** → **Allow**. (This "unsafe" warning appears for all unverified personal scripts — it's fine because you wrote it.)
+- Copy the **Web app URL** — it looks like `https://script.google.com/macros/s/AKfy.../exec`. This is your endpoint.
+
+### 5. Paste the URL into the site
+
+- Open `citimore-site/index.html`.
+- Find the line (search for `WAITLIST_ENDPOINT`):
+  ```js
+  const WAITLIST_ENDPOINT = 'PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE';
+  ```
+- Replace the placeholder with the URL you copied. Save.
+
+### 6. Test locally
+
+- Open `index.html` in a browser (double-click, or `npx serve .`).
+- Scroll to the waitlist, fill it in, hit submit.
+- Flip to your Sheet — you should see a new row in a freshly-created `Waitlist` tab with all the fields.
+- If nothing appears: open DevTools → Console. You'll see `[CitiMore Waitlist] submit failed` with the error. Most common causes: the URL wasn't pasted correctly, or the deployment access is set to "Only myself" instead of "Anyone".
+
+### 7. Deploy to Vercel
+
+- Once the local test works, push to Vercel (`vercel --prod` from the `citimore-site` folder, or push to GitHub).
+- Do one more live test against the production URL to confirm.
+
+## Columns you'll see in the Sheet
+
+| Timestamp | Type | Role | City | Housing | Properties | Email | Source | Page | SubmittedAt | IP |
+|---|---|---|---|---|---|---|---|---|---|---|
+| auto | person / agent | Student / Estate Agent / ... | FCT — Abuja / ... | I need a room urgently / ... | 1–2 / 3–5 / ... | person@email.com | direct / https://... | https://citimore.ng | ISO timestamp from browser | (blank by default) |
+
+## Updating the script later
+
+- If you tweak `Code.gs`, you **must click Deploy → Manage deployments → (pencil icon) → Version: New version → Deploy** again — Apps Script doesn't re-deploy on save.
+- The URL stays the same across new versions of the same deployment, so you don't need to update `index.html`.
+
+## Reading the live count on the page (optional, later)
+
+The script also responds to `GET` with a real count. If you want the `412` placeholder to become real on page load, add this near the top of the script block in `index.html`:
+
+```js
+fetch(WAITLIST_ENDPOINT).then(r => r.json()).then(d => {
+  if (d && typeof d.count === 'number') {
+    count = d.count;
+    ['wl-count','hero-count','sticky-count'].forEach(id => {
+      const el = document.getElementById(id); if (el) el.textContent = count;
+    });
+  }
+}).catch(() => {});
+```
+
+## Hardening for production
+
+- **Rate-limit:** add a honeypot hidden input `<input name="company" style="display:none">` and in `doPost` reject if `e.parameter.company` is non-empty. Blocks ~95% of bots.
+- **Email the team on new signups:** at the end of `doPost`, add
+  ```js
+  MailApp.sendEmail('hello@citimore.ng', 'New CitiMore signup', email + '  (' + params.type + ')');
+  ```
+- **Double opt-in:** send a confirmation email via Resend / SendGrid / Gmail-from-Apps-Script with a unique confirm link (needs a bit more code — ask me and I'll scaffold it).
+- **Privacy:** add a one-liner under the email input: "We'll only email you about CitiMore launch updates. Your data is stored in our Google Sheet and is NDPR-protected."
+
+## Troubleshooting quick table
+
+| Symptom | Cause | Fix |
+|---|---|---|
+| "Network error — please try again" in the form | `WAITLIST_ENDPOINT` still has the placeholder, or URL is wrong | Paste the correct `/exec` URL. |
+| Form looks like it worked but Sheet stays empty | Deployment access isn't "Anyone" | Deploy → Manage deployments → edit → set access to Anyone. |
+| "Authorization required" error in DevTools | Script wasn't authorized during Deploy step | Re-run the Deploy flow and click through the authorization screens. |
+| Duplicate submissions from the same email aren't appended | Working as designed (de-dup by email). | Remove the `emailExists_` check in `Code.gs` if you don't want de-dup. |
