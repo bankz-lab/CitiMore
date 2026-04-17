@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CitiMore — Find Your Person. Split the Rent.</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --forest:#0F6E56;
+  --leaf:#1D9E75;
+  --mint:#E8F5EF;
+  --mintdk:#C5E8D8;
+  --cream:#F8F4EE;
+  --creamdk:#EDE5D8;
+  --bark:#1A1612;
+  --bark2:#3B342C;
+  --bark3:#7A6E62;
+  --sand:#C8B49A;
+  --sandlt:#EAE0D0;
+  --terra:#C05E3A;
+  --terradim:#E8C4B0;
+  --white:#FFFFFF;
+  --ff-display:'Playfair Display',Georgia,serif;
+  --ff-body:'Instrument Sans',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--ff-body);background:var(--cream);color:var(--bark);overflow-x:hidden;line-height:1.6}
+
+/* ── Grain overlay ── */
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:999;
+  opacity:.025;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:900;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 5%;height:68px;
+  background:rgba(248,244,238,.93);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(200,180,154,.25);
+  transition:all .3s;
+}
+.nav-brand{
+  font-family:var(--ff-display);font-weight:900;font-size:1.45rem;
+  letter-spacing:-.02em;text-decoration:none;
+}
+.nav-brand .c{color:var(--forest)}
+.nav-brand .m{color:var(--terra)}
+.nav-links{display:flex;align-items:center;gap:28px}
+.nav-links a{
+  font-size:.85rem;font-weight:500;color:var(--bark2);
+  text-decoration:none;transition:color .2s;letter-spacing:.01em;
+}
+.nav-links a:hover{color:var(--forest)}
+.nav-btn{
+  background:var(--bark);color:var(--white);
+  padding:9px 22px;border-radius:100px;
+  font-size:.85rem;font-weight:600;
+  border:none;cursor:pointer;text-decoration:none;
+  transition:all .2s;letter-spacing:.01em;
+}
+.nav-btn:hover{background:var(--forest);transform:translateY(-1px)}
+.nav-hamburger{display:none;background:none;border:none;cursor:pointer;padding:4px}
+.nav-hamburger span{display:block;width:22px;height:2px;background:var(--bark);margin:5px 0;transition:.3s}
+
+/* ── HERO ── */
+.hero{
+  min-height:100svh;
+  display:grid;grid-template-columns:1fr 1fr;
+  align-items:center;gap:0;
+  padding:100px 5% 80px;
+  position:relative;overflow:hidden;
+}
+.hero-left{position:relative;z-index:2}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--mint);border:1px solid rgba(15,110,86,.18);
+  border-radius:100px;padding:6px 16px;
+  font-size:.72rem;font-weight:700;color:var(--forest);
+  letter-spacing:.08em;text-transform:uppercase;
+  margin-bottom:28px;
+  animation:riseUp .7s ease both;
+}
+.hero-eyebrow::before{
+  content:'';width:7px;height:7px;border-radius:50%;
+  background:var(--leaf);animation:breathe 2.4s infinite;
+}
+@keyframes breathe{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.5}}
+
+.hero h1{
+  font-family:var(--ff-display);
+  font-size:clamp(2.8rem,5.5vw,5.2rem);
+  font-weight:900;line-height:1.06;
+  letter-spacing:-.04em;color:var(--bark);
+  margin-bottom:28px;
+  animation:riseUp .75s .08s ease both;
+}
+.hero h1 .accent{color:var(--forest);font-style:italic}
+.hero h1 .terra{color:var(--terra)}
+
+.hero-sub{
+  font-size:1.08rem;color:var(--bark2);
+  max-width:480px;line-height:1.75;
+  margin-bottom:40px;
+  animation:riseUp .75s .16s ease both;
+}
+
+.hero-ctas{
+  display:flex;flex-wrap:wrap;gap:12px;margin-bottom:52px;
+  animation:riseUp .75s .24s ease both;
+}
+.btn-primary{
+  background:var(--forest);color:var(--white);
+  padding:15px 30px;border-radius:100px;
+  font-size:.95rem;font-weight:700;font-family:var(--ff-body);
+  border:none;cursor:pointer;text-decoration:none;
+  display:inline-flex;align-items:center;gap:8px;
+  transition:all .25s;
+  box-shadow:0 6px 24px rgba(15,110,86,.28);
+  letter-spacing:.01em;
+}
+.btn-primary:hover{background:var(--leaf);transform:translateY(-2px);box-shadow:0 10px 32px rgba(15,110,86,.38)}
+.btn-outline{
+  background:transparent;color:var(--bark);
+  padding:15px 30px;border-radius:100px;
+  font-size:.95rem;font-weight:600;font-family:var(--ff-body);
+  border:2px solid var(--sandlt);cursor:pointer;text-decoration:none;
+  display:inline-flex;align-items:center;gap:8px;
+  transition:all .25s;letter-spacing:.01em;
+}
+.btn-outline:hover{border-color:var(--bark2);background:var(--creamdk)}
+
+.hero-trust{
+  display:flex;align-items:center;gap:14px;
+  animation:riseUp .75s .32s ease both;
+}
+.trust-avatars{display:flex}
+.trust-avatars span{
+  width:34px;height:34px;border-radius:50%;
+  border:2.5px solid var(--cream);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.62rem;font-weight:700;
+  margin-left:-9px;background:var(--mint);color:var(--forest);
+}
+.trust-avatars span:first-child{margin-left:0}
+.trust-text{font-size:.82rem;color:var(--bark3)}
+.trust-text strong{color:var(--bark);font-weight:700}
+
+/* Hero right — abstract city illustration */
+.hero-right{
+  position:relative;height:520px;
+  animation:riseUp .8s .1s ease both;
+}
+.city-card{
+  position:absolute;background:var(--white);
+  border-radius:20px;padding:22px 20px;
+  box-shadow:0 8px 48px rgba(26,22,18,.1);
+  border:1px solid rgba(200,180,154,.3);
+  transition:transform .3s;
+}
+.city-card:hover{transform:translateY(-4px)}
+.city-card.card-main{
+  width:260px;right:8%;top:10%;
+  background:var(--forest);color:var(--white);
+}
+.city-card.card-main h3{
+  font-family:var(--ff-display);font-size:1.2rem;
+  font-weight:700;color:var(--white);margin-bottom:6px;
+}
+.city-card.card-main p{font-size:.82rem;color:rgba(255,255,255,.7);margin-bottom:16px}
+.card-price{
+  font-family:var(--ff-display);font-size:1.8rem;
+  font-weight:900;color:var(--white);display:block;margin-bottom:4px;
+}
+.card-price-label{font-size:.72rem;color:rgba(255,255,255,.6)}
+.card-badge{
+  display:inline-block;background:rgba(255,255,255,.18);
+  border-radius:100px;padding:4px 12px;
+  font-size:.72rem;font-weight:600;color:var(--white);
+  margin-top:12px;
+}
+.city-card.card-match{
+  width:220px;left:5%;top:30%;
+  animation:float 4s 1s ease-in-out infinite;
+}
+.city-card.card-match .match-avatar{
+  width:42px;height:42px;border-radius:50%;
+  background:var(--mint);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:.85rem;color:var(--forest);
+  margin-bottom:10px;
+}
+.city-card.card-match h4{font-size:.95rem;font-weight:700;color:var(--bark);margin-bottom:4px}
+.city-card.card-match p{font-size:.78rem;color:var(--bark3)}
+.match-compat{
+  display:flex;align-items:center;gap:6px;
+  margin-top:10px;
+}
+.compat-bar{flex:1;height:4px;border-radius:2px;background:var(--sandlt)}
+.compat-fill{height:4px;border-radius:2px;background:var(--leaf);width:87%}
+.compat-pct{font-size:.72rem;font-weight:700;color:var(--leaf)}
+
+.city-card.card-unlock{
+  width:200px;right:4%;bottom:12%;
+  animation:float 4s 2s ease-in-out infinite;
+}
+.unlock-icon{font-size:1.4rem;margin-bottom:8px}
+.city-card.card-unlock h4{font-size:.88rem;font-weight:700;color:var(--bark);margin-bottom:4px}
+.city-card.card-unlock p{font-size:.75rem;color:var(--bark3)}
+.unlock-price{
+  font-family:var(--ff-display);font-size:1.3rem;
+  font-weight:900;color:var(--terra);margin-top:8px;display:block;
+}
+
+.hero-bg-orb{
+  position:absolute;right:-8%;top:50%;transform:translateY(-50%);
+  width:420px;height:420px;border-radius:50%;
+  background:radial-gradient(circle,rgba(29,158,117,.09) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-bg-orb2{
+  position:absolute;left:40%;bottom:-10%;
+  width:300px;height:300px;border-radius:50%;
+  background:radial-gradient(circle,rgba(192,94,58,.06) 0%,transparent 70%);
+  pointer-events:none;
+}
+
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes riseUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── TRUST BAR ── */
+.trust-bar{
+  background:var(--bark);
+  padding:14px 5%;
+  display:flex;align-items:center;justify-content:center;
+  flex-wrap:wrap;gap:40px;
+}
+.tbar-item{
+  display:flex;align-items:center;gap:10px;
+  color:rgba(255,255,255,.75);font-size:.82rem;font-weight:500;
+}
+.tbar-dot{
+  width:7px;height:7px;border-radius:50%;background:var(--leaf);
+  flex-shrink:0;
+}
+
+/* ── SECTION COMMONS ── */
+section{padding:100px 5%}
+.label{
+  font-size:.7rem;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--terra);margin-bottom:14px;
+}
+.display{
+  font-family:var(--ff-display);
+  font-size:clamp(2rem,4vw,3.2rem);
+  font-weight:900;line-height:1.12;letter-spacing:-.03em;
+  color:var(--bark);margin-bottom:20px;
+}
+.display em{font-style:italic;color:var(--forest)}
+.body-lg{font-size:1.05rem;color:var(--bark2);line-height:1.75;max-width:580px}
+.section-hd{margin-bottom:64px}
+
+/* ── PROBLEM SECTION ── */
+.problem{background:var(--bark)}
+.problem .label{color:rgba(200,180,154,.7)}
+.problem .display{color:var(--white)}
+.problem .display em{color:var(--terradim);font-style:italic}
+.problem .body-lg{color:rgba(255,255,255,.6);max-width:520px}
+
+.problem-cards{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:20px;
+  margin-top:60px;
+}
+.prob-card{
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:18px;padding:32px 28px;
+  transition:all .3s;position:relative;overflow:hidden;
+}
+.prob-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:var(--forest);transition:height .3s;
+}
+.prob-card:hover{background:rgba(255,255,255,.08);transform:translateY(-4px)}
+.prob-card:hover::before{height:5px}
+.prob-num{
+  font-family:var(--ff-display);font-size:3.2rem;
+  font-weight:900;color:var(--terra);opacity:.5;
+  line-height:1;margin-bottom:18px;display:block;
+}
+.prob-card h3{font-size:1.1rem;font-weight:700;color:var(--white);margin-bottom:12px}
+.prob-card p{font-size:.88rem;color:rgba(255,255,255,.55);line-height:1.72}
+
+/* ── HOW IT WORKS ── */
+.how{background:var(--creamdk)}
+.steps{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:24px;margin-top:60px;
+}
+.step{
+  background:var(--white);border-radius:18px;padding:32px 24px;
+  border:1px solid var(--sandlt);
+  transition:all .3s;position:relative;
+}
+.step:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(26,22,18,.08)}
+.step-num{
+  width:48px;height:48px;border-radius:50%;
+  background:var(--forest);color:var(--white);
+  font-family:var(--ff-display);font-size:1.2rem;font-weight:900;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:20px;
+}
+.step:nth-child(3) .step-num,.step:nth-child(4) .step-num{background:var(--terra)}
+.step h3{font-size:1rem;font-weight:700;color:var(--bark);margin-bottom:10px}
+.step p{font-size:.86rem;color:var(--bark3);line-height:1.7}
+
+/* ── BEHAVIOURAL INSIGHT BUTTONS ── */
+.explore{background:var(--cream)}
+.explore-intro{
+  display:flex;align-items:flex-start;gap:12px;
+  background:var(--mint);border:1px solid rgba(15,110,86,.15);
+  border-radius:14px;padding:18px 22px;
+  font-size:.88rem;color:var(--bark2);
+  margin-bottom:52px;max-width:680px;
+  line-height:1.6;
+}
+.explore-intro::before{content:'💡';font-size:1rem;flex-shrink:0;margin-top:1px}
+
+.insight-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px;
+}
+.insight-btn{
+  position:relative;overflow:hidden;
+  background:var(--white);
+  border:2px solid var(--sandlt);
+  border-radius:18px;padding:28px 24px;
+  cursor:pointer;text-align:left;
+  transition:all .28s;
+}
+.insight-btn::after{
+  content:'';position:absolute;inset:0;
+  background:var(--forest);
+  transform:scaleY(0);transform-origin:bottom;
+  transition:transform .32s cubic-bezier(.4,0,.2,1);z-index:0;
+}
+.insight-btn:hover{border-color:var(--forest);transform:translateY(-4px);
+  box-shadow:0 14px 44px rgba(15,110,86,.18)}
+.insight-btn:hover::after{transform:scaleY(1)}
+.insight-btn:hover .ib-icon,
+.insight-btn:hover .ib-title,
+.insight-btn:hover .ib-body,
+.insight-btn:hover .ib-chip{color:var(--white) !important}
+.insight-btn:hover .ib-chip{background:rgba(255,255,255,.2) !important}
+.ib-inner{position:relative;z-index:1}
+.ib-icon{font-size:1.7rem;margin-bottom:14px;display:block;transition:color .3s}
+.ib-title{font-size:.98rem;font-weight:700;color:var(--bark);margin-bottom:8px;transition:color .3s;line-height:1.35}
+.ib-body{font-size:.82rem;color:var(--bark3);line-height:1.65;margin-bottom:16px;transition:color .3s}
+.ib-chip{
+  display:inline-block;
+  background:var(--mint);color:var(--forest);
+  font-size:.72rem;font-weight:700;
+  padding:4px 12px;border-radius:100px;
+  letter-spacing:.04em;text-transform:uppercase;
+  transition:all .3s;
+}
+
+/* Modal */
+.modal-bg{
+  display:none;position:fixed;inset:0;z-index:9999;
+  background:rgba(26,22,18,.72);backdrop-filter:blur(10px);
+  align-items:center;justify-content:center;padding:20px;
+}
+.modal-bg.on{display:flex}
+.modal{
+  background:var(--cream);border-radius:24px;
+  max-width:500px;width:100%;padding:44px 40px;
+  position:relative;animation:popIn .3s ease;
+}
+@keyframes popIn{from{opacity:0;transform:scale(.94) translateY(12px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-x{
+  position:absolute;top:14px;right:14px;
+  background:var(--creamdk);border:none;
+  width:34px;height:34px;border-radius:50%;
+  cursor:pointer;font-size:1.1rem;color:var(--bark2);
+  display:flex;align-items:center;justify-content:center;transition:.2s;
+}
+.modal-x:hover{background:var(--sandlt)}
+.modal-em{font-size:2.4rem;margin-bottom:14px;display:block}
+.modal h3{
+  font-family:var(--ff-display);font-size:1.55rem;font-weight:900;
+  color:var(--bark);margin-bottom:10px;letter-spacing:-.02em;
+}
+.modal p{font-size:.92rem;color:var(--bark2);line-height:1.72;margin-bottom:22px}
+.modal-action{
+  width:100%;padding:14px;border-radius:100px;
+  background:var(--forest);color:var(--white);
+  font-size:.95rem;font-weight:700;border:none;cursor:pointer;
+  transition:.25s;font-family:var(--ff-body);
+}
+.modal-action:hover{background:var(--leaf)}
+.modal-note{text-align:center;font-size:.76rem;color:var(--bark3);margin-top:10px}
+
+/* ── AUDIENCE TABS ── */
+.audience{background:var(--white)}
+.tabs{
+  display:flex;gap:8px;
+  background:var(--creamdk);border-radius:100px;
+  padding:4px;width:fit-content;margin-bottom:48px;
+}
+.tab{
+  padding:10px 22px;border-radius:100px;
+  border:none;font-size:.85rem;font-weight:600;
+  cursor:pointer;transition:all .25s;background:transparent;
+  color:var(--bark2);font-family:var(--ff-body);
+}
+.tab.active{background:var(--white);color:var(--forest);
+  box-shadow:0 2px 10px rgba(26,22,18,.08)}
+.tab-content{display:none}
+.tab-content.active{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.tab-text .display{font-size:clamp(1.6rem,3vw,2.4rem);margin-bottom:16px}
+.audience-points{list-style:none;margin-top:24px;display:flex;flex-direction:column;gap:12px}
+.audience-points li{
+  display:flex;align-items:flex-start;gap:12px;
+  font-size:.92rem;color:var(--bark2);line-height:1.6;
+}
+.audience-points li::before{
+  content:'';width:7px;height:7px;border-radius:50%;
+  background:var(--forest);margin-top:7px;flex-shrink:0;
+}
+.tab-visual{
+  background:var(--bark);border-radius:22px;padding:36px 32px;
+  color:var(--white);position:relative;overflow:hidden;
+}
+.tab-visual::before{
+  content:'';position:absolute;right:-30px;bottom:-30px;
+  width:200px;height:200px;border-radius:50%;
+  background:rgba(29,158,117,.12);pointer-events:none;
+}
+.tab-visual h4{
+  font-family:var(--ff-display);font-size:1.3rem;
+  font-weight:700;color:var(--white);margin-bottom:18px;
+}
+.stat-row{display:flex;flex-direction:column;gap:14px}
+.stat-block{
+  background:rgba(255,255,255,.06);
+  border-radius:12px;padding:16px 18px;
+  border:1px solid rgba(255,255,255,.08);
+}
+.stat-val{
+  font-family:var(--ff-display);font-size:2rem;font-weight:900;
+  color:var(--white);line-height:1;display:block;margin-bottom:4px;
+}
+.stat-lbl{font-size:.78rem;color:rgba(255,255,255,.5)}
+
+/* ── SOCIAL PROOF ── */
+.proof{background:var(--creamdk)}
+.proof-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:60px}
+.proof-card{
+  background:var(--white);border-radius:18px;padding:30px 26px;
+  border:1px solid var(--sandlt);transition:all .3s;
+}
+.proof-card:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(26,22,18,.08)}
+.stars{color:var(--terra);letter-spacing:3px;font-size:.9rem;margin-bottom:14px}
+.proof-quote{
+  font-size:.92rem;color:var(--bark2);line-height:1.75;
+  margin-bottom:20px;font-style:italic;position:relative;padding-left:16px;
+}
+.proof-quote::before{
+  content:'"';position:absolute;left:0;top:-2px;
+  font-family:var(--ff-display);font-size:1.8rem;
+  color:var(--forest);line-height:1;
+}
+.proof-person{display:flex;align-items:center;gap:12px}
+.proof-avatar{
+  width:38px;height:38px;border-radius:50%;
+  background:var(--mint);display:flex;align-items:center;
+  justify-content:center;font-weight:700;font-size:.78rem;color:var(--forest);
+  flex-shrink:0;
+}
+.proof-name{font-size:.85rem;font-weight:700;color:var(--bark)}
+.proof-info{font-size:.75rem;color:var(--bark3)}
+
+/* ── STATS BAND ── */
+.stats-band{background:var(--forest);padding:72px 5%}
+.stats-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:1px;background:rgba(255,255,255,.12);
+  border-radius:18px;overflow:hidden;
+}
+.stat-item{
+  background:var(--forest);padding:38px 28px;text-align:center;
+  transition:.3s;
+}
+.stat-item:hover{background:rgba(255,255,255,.06)}
+.stat-big{
+  font-family:var(--ff-display);font-size:2.8rem;
+  font-weight:900;color:var(--white);display:block;line-height:1;margin-bottom:8px;
+}
+.stat-label{font-size:.8rem;color:rgba(255,255,255,.6);font-weight:500}
+
+/* ── FOR AGENTS ── */
+.agents{background:var(--terradim)}
+.agents-inner{
+  display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;
+}
+.agents .display em{color:var(--terra)}
+.agents .body-lg{color:var(--bark2)}
+.agent-benefits{display:flex;flex-direction:column;gap:16px;margin-top:28px}
+.abenefit{
+  display:flex;align-items:flex-start;gap:16px;
+  background:rgba(255,255,255,.6);border-radius:14px;padding:18px 20px;
+  border:1px solid rgba(192,94,58,.12);transition:.3s;
+}
+.abenefit:hover{transform:translateX(6px);background:rgba(255,255,255,.85);border-color:var(--terra)}
+.abenefit-icon{
+  width:38px;height:38px;border-radius:10px;
+  background:rgba(192,94,58,.15);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1rem;flex-shrink:0;
+}
+.abenefit-text h4{font-size:.92rem;font-weight:700;color:var(--bark);margin-bottom:3px}
+.abenefit-text p{font-size:.8rem;color:var(--bark2);line-height:1.6}
+.agent-cta-box{
+  background:var(--bark);border-radius:22px;padding:40px 36px;text-align:center;
+}
+.agent-cta-box h3{
+  font-family:var(--ff-display);font-size:1.7rem;font-weight:900;
+  color:var(--white);margin-bottom:12px;letter-spacing:-.02em;
+}
+.agent-cta-box p{font-size:.88rem;color:var(--sandlt);margin-bottom:26px;line-height:1.7}
+.btn-terra{
+  background:var(--terra);color:var(--white);
+  padding:14px 28px;border-radius:100px;
+  font-size:.92rem;font-weight:700;border:none;cursor:pointer;
+  display:inline-block;text-decoration:none;
+  transition:.25s;font-family:var(--ff-body);
+}
+.btn-terra:hover{background:#d46840;transform:translateY(-2px);box-shadow:0 8px 24px rgba(192,94,58,.4)}
+
+/* ── WAITLIST ── */
+.waitlist{
+  background:linear-gradient(140deg,var(--forest) 0%,#0a5242 100%);
+  padding:100px 5%;position:relative;overflow:hidden;
+}
+.waitlist::before{
+  content:'';position:absolute;right:-80px;top:-80px;
+  width:450px;height:450px;border-radius:50%;
+  background:rgba(255,255,255,.04);pointer-events:none;
+}
+.waitlist-inner{max-width:660px;margin:0 auto;text-align:center;position:relative;z-index:1}
+.waitlist .label{color:rgba(255,255,255,.55);text-align:center}
+.waitlist h2{
+  font-family:var(--ff-display);
+  font-size:clamp(2rem,4vw,3.4rem);
+  font-weight:900;letter-spacing:-.03em;
+  color:var(--white);margin-bottom:16px;line-height:1.1;
+}
+.waitlist h2 em{font-style:italic;color:var(--terradim)}
+.waitlist-sub{
+  font-size:1.02rem;color:rgba(255,255,255,.7);
+  margin-bottom:44px;line-height:1.72;
+}
+
+/* Segmented tabs */
+.seg-tabs{
+  display:flex;gap:6px;
+  background:rgba(0,0,0,.22);border-radius:100px;padding:4px;
+  margin-bottom:30px;
+}
+.seg-tab{
+  flex:1;padding:10px 14px;border-radius:100px;
+  border:none;font-size:.83rem;font-weight:600;
+  cursor:pointer;transition:.25s;
+  background:transparent;color:rgba(255,255,255,.55);
+  font-family:var(--ff-body);
+}
+.seg-tab.active{background:var(--white);color:var(--forest)}
+
+.form-step{display:none}
+.form-step.active{display:block}
+
+.form-q{font-size:.82rem;font-weight:600;color:rgba(255,255,255,.75);
+  text-align:left;margin-bottom:9px}
+.form-opts{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
+  gap:8px;margin-bottom:18px;
+}
+.form-opt{
+  padding:10px 12px;border-radius:10px;
+  border:1.5px solid rgba(255,255,255,.18);
+  background:transparent;color:rgba(255,255,255,.65);
+  font-size:.78rem;font-weight:500;cursor:pointer;
+  transition:.2s;text-align:center;font-family:var(--ff-body);
+}
+.form-opt:hover,.form-opt.sel{
+  border-color:var(--leaf);background:rgba(29,158,117,.2);color:var(--white);
+}
+.state-sel{
+  width:100%;padding:12px 16px;border-radius:10px;
+  border:1.5px solid rgba(255,255,255,.18);
+  background:rgba(255,255,255,.07);color:var(--white);
+  font-size:.88rem;margin-bottom:18px;appearance:none;
+  cursor:pointer;font-family:var(--ff-body);transition:.2s;
+}
+.state-sel:focus{outline:none;border-color:var(--leaf)}
+.state-sel option{background:var(--bark);color:var(--cream)}
+.email-row{display:flex;gap:10px;flex-wrap:wrap}
+.email-inp{
+  flex:1;min-width:200px;
+  padding:14px 20px;border-radius:100px;
+  border:1.5px solid rgba(255,255,255,.18);
+  background:rgba(255,255,255,.1);color:var(--white);
+  font-size:.92rem;font-family:var(--ff-body);transition:.2s;
+}
+.email-inp::placeholder{color:rgba(255,255,255,.45)}
+.email-inp:focus{outline:none;border-color:rgba(255,255,255,.55)}
+.submit-btn{
+  padding:14px 26px;border-radius:100px;
+  background:var(--terra);color:var(--white);
+  font-size:.92rem;font-weight:700;border:none;cursor:pointer;
+  transition:.25s;white-space:nowrap;font-family:var(--ff-body);
+  box-shadow:0 4px 18px rgba(192,94,58,.4);
+}
+.submit-btn:hover{background:#d46840;transform:translateY(-1px)}
+.waitlist-count{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  margin-top:18px;font-size:.82rem;color:rgba(255,255,255,.55);
+}
+.count-pulse{width:8px;height:8px;border-radius:50%;background:var(--leaf);animation:breathe 2s infinite}
+.count-num{font-weight:700;color:var(--white)}
+
+.success-state{
+  display:none;text-align:center;
+  background:rgba(29,158,117,.15);
+  border:1px solid rgba(29,158,117,.3);
+  border-radius:16px;padding:32px 24px;
+}
+.success-state h3{
+  font-family:var(--ff-display);font-size:1.5rem;font-weight:900;
+  color:var(--white);margin:12px 0 8px;
+}
+.success-state p{font-size:.88rem;color:rgba(255,255,255,.7)}
+.wa-share{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,.14);color:var(--white);
+  padding:10px 20px;border-radius:100px;
+  font-size:.82rem;font-weight:600;border:none;cursor:pointer;
+  margin-top:16px;transition:.2s;font-family:var(--ff-body);
+}
+.wa-share:hover{background:rgba(255,255,255,.24)}
+
+/* ── FOOTER ── */
+footer{background:var(--bark);padding:56px 5% 28px}
+.footer-grid{
+  display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:60px;
+  padding-bottom:44px;
+  border-bottom:1px solid rgba(255,255,255,.07);margin-bottom:28px;
+}
+.foot-brand{
+  font-family:var(--ff-display);font-weight:900;font-size:1.6rem;
+  letter-spacing:-.02em;margin-bottom:12px;
+}
+.foot-brand .c{color:var(--white)}
+.foot-brand .m{color:var(--terra)}
+.foot-tagline{font-size:.82rem;color:var(--sandlt);line-height:1.7;margin-bottom:18px;max-width:240px}
+.foot-social{display:flex;gap:10px}
+.soc{
+  width:34px;height:34px;border-radius:50%;
+  background:rgba(255,255,255,.07);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--sandlt);font-size:.75rem;font-weight:700;
+  text-decoration:none;transition:.2s;
+}
+.soc:hover{background:var(--forest);color:var(--white)}
+.foot-col h4{font-size:.8rem;font-weight:700;color:var(--white);margin-bottom:14px;letter-spacing:.04em}
+.foot-col a{
+  display:block;font-size:.8rem;color:var(--sandlt);
+  text-decoration:none;margin-bottom:9px;transition:.2s;
+}
+.foot-col a:hover{color:var(--white)}
+.foot-bottom{
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;
+}
+.foot-copy{font-size:.75rem;color:var(--bark3)}
+.foot-legal{display:flex;gap:18px}
+.foot-legal a{font-size:.75rem;color:var(--bark3);text-decoration:none;transition:.2s}
+.foot-legal a:hover{color:var(--sandlt)}
+
+/* ── STICKY BAR ── */
+.sticky-bar{
+  position:fixed;bottom:0;left:0;right:0;
+  background:var(--bark);
+  display:none;align-items:center;justify-content:space-between;
+  padding:13px 5%;z-index:850;flex-wrap:wrap;gap:12px;
+  box-shadow:0 -4px 24px rgba(0,0,0,.25);
+  animation:slideFromBottom .4s ease;
+}
+.sticky-bar.show{display:flex}
+@keyframes slideFromBottom{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.sticky-bar p{font-size:.87rem;color:rgba(255,255,255,.8);font-weight:500}
+.sticky-bar strong{color:var(--white);font-weight:700}
+.sticky-cta{
+  background:var(--forest);color:var(--white);
+  padding:9px 22px;border-radius:100px;
+  font-size:.82rem;font-weight:700;border:none;cursor:pointer;
+  white-space:nowrap;font-family:var(--ff-body);transition:.2s;
+}
+.sticky-cta:hover{background:var(--leaf)}
+
+/* ── SCROLL REVEALS ── */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease}
+.reveal.in{opacity:1;transform:translateY(0)}
+.reveal.d1{transition-delay:.1s}
+.reveal.d2{transition-delay:.2s}
+.reveal.d3{transition-delay:.3s}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1024px){
+  .hero{grid-template-columns:1fr;padding-top:110px}
+  .hero-right{height:320px;margin-top:40px}
+  .city-card.card-main{right:4%;top:0;width:230px}
+  .city-card.card-match{left:4%;top:40%;width:200px}
+  .city-card.card-unlock{right:4%;bottom:0;width:180px}
+  .problem-cards{grid-template-columns:1fr;max-width:520px}
+  .steps{grid-template-columns:1fr 1fr}
+  .agents-inner{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:768px){
+  .nav-links{display:none}
+  .hero h1{font-size:2.5rem}
+  .insight-grid{grid-template-columns:1fr}
+  .tabs{flex-wrap:wrap}
+  .tab-content.active{grid-template-columns:1fr}
+  .proof-grid{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .footer-grid{grid-template-columns:1fr}
+  .email-row{flex-direction:column}
+  .email-inp,.submit-btn{width:100%}
+  .foot-bottom{flex-direction:column;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<!-- ── NAV ──────────────────────────────────────────────────────────── -->
+<nav id="nav">
+  <a href="#top" class="nav-brand"><span class="c">Citi</span><span class="m">More</span></a>
+  <div class="nav-links">
+    <a href="#how-it-works">How it works</a>
+    <a href="#explore">Explore</a>
+    <a href="#for-agents">For Agents</a>
+  </div>
+  <a href="#waitlist" class="nav-btn">Get Early Access →</a>
+</nav>
+
+<!-- ── HERO ──────────────────────────────────────────────────────────── -->
+<section class="hero" id="top">
+  <div class="hero-bg-orb"></div>
+  <div class="hero-bg-orb2"></div>
+
+  <div class="hero-left">
+    <div class="hero-eyebrow">🏙️ Now Building in Abuja</div>
+
+    <h1>
+      Find your person.<br>
+      <span class="accent">Split the rent.</span><br>
+      Own the <span class="terra">city.</span>
+    </h1>
+
+    <p class="hero-sub">
+      CitiMore is Nigeria's trusted shared housing platform —
+      built for students, professionals, and corps members
+      who deserve a better way to find home.
+    </p>
+
+    <div class="hero-ctas">
+      <a href="#waitlist" class="btn-primary">
+        Join the Waitlist →
+      </a>
+      <a href="#explore" class="btn-outline">
+        Explore the Platform
+      </a>
+    </div>
+
+    <div class="hero-trust">
+      <div class="trust-avatars">
+        <span>AO</span><span>BK</span><span>FM</span><span>CE</span><span>+</span>
+      </div>
+      <p class="trust-text">
+        <strong id="hero-count">412</strong> people already on the waitlist
+      </p>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <!-- Listing card -->
+    <div class="city-card card-main">
+      <h3>Wuse 2, Abuja</h3>
+      <p>2-bedroom · Available now</p>
+      <span class="card-price">₦180,000</span>
+      <span class="card-price-label">per person / year · split 2 ways</span>
+      <div>
+        <span class="card-badge">✓ Verified Landlord</span>
+      </div>
+    </div>
+
+    <!-- Roommate match card -->
+    <div class="city-card card-match">
+      <div class="match-avatar">KO</div>
+      <h4>Kola O.</h4>
+      <p>Software developer · Quiet household</p>
+      <div class="match-compat">
+        <div class="compat-bar"><div class="compat-fill"></div></div>
+        <span class="compat-pct">87% match</span>
+      </div>
+    </div>
+
+    <!-- Unlock card -->
+    <div class="city-card card-unlock">
+      <div class="unlock-icon">🔓</div>
+      <h4>Unlock Contact</h4>
+      <p>Get the direct phone number</p>
+      <span class="unlock-price">₦2000</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── TRUST BAR ──────────────────────────────────────────────────────── -->
+<div class="trust-bar">
+  <div class="tbar-item"><div class="tbar-dot"></div> NYSC ID Verified</div>
+  <div class="tbar-item"><div class="tbar-dot"></div> Student & Work ID Accepted</div>
+  <div class="tbar-item"><div class="tbar-dot"></div> Landlord NIN / CAC Checked</div>
+  <div class="tbar-item"><div class="tbar-dot"></div> Contacts Locked Until You Pay ₦500</div>
+  <div class="tbar-item"><div class="tbar-dot"></div> No Fake Listings</div>
+</div>
+
+<!-- ── PROBLEM ──────────────────────────────────────────────────────────── -->
+<section class="problem">
+  <div class="section-hd">
+    <div class="label">The Problem</div>
+    <h2 class="display reveal">
+      Finding a home in Abuja<br>will <em>humble you.</em>
+    </h2>
+    <p class="body-lg reveal d1">
+      The housing market in Nigeria is not broken by accident.
+      It is broken by design — and young people pay the price every single day.
+    </p>
+  </div>
+
+  <div class="problem-cards">
+    <div class="prob-card reveal">
+      <span class="prob-num">01</span>
+      <h3>Predatory agents everywhere</h3>
+      <p>Fake listings. Inspection fees before you see a room. Agents who take your deposit and show you bad houses. No verification. No accountability. No recourse. You lose the money and start over.</p>
+    </div>
+    <div class="prob-card reveal d1">
+      <span class="prob-num">02</span>
+      <h3>Two years rent upfront</h3>
+      <p>Landlords demanding ₦900,000 to ₦2000,500,000 in cash before you sign anything. Young Nigerians breaking savings, borrowing from family, settling for unsafe areas because decent housing was priced out of reach.</p>
+    </div>
+    <div class="prob-card reveal d2">
+      <span class="prob-num">03</span>
+      <h3>No safe way to share</h3>
+      <p>Splitting rent solves everything — but who do you trust? WhatsApp groups full of strangers. No verification, no compatibility check, no ratings. Moving in with the wrong person becomes its own nightmare.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── HOW IT WORKS ──────────────────────────────────────────────────────── -->
+<section class="how" id="how-it-works">
+  <div class="section-hd" style="text-align:center">
+    <div class="label" style="text-align:center">The Solution</div>
+    <h2 class="display reveal" style="margin:0 auto 16px;max-width:600px">
+      <em>Simple</em> enough to use<br>in 60 seconds.
+    </h2>
+    <p class="body-lg reveal d1" style="margin:0 auto;text-align:center">
+      CitiMore works in four steps. No middlemen. No stress. Just safe, verified housing.
+    </p>
+  </div>
+
+  <div class="steps">
+    <div class="step reveal">
+      <div class="step-num">1</div>
+      <h3>Sign Up & Verify</h3>
+      <p>Create your profile. Upload your ID — NYSC call-up, student ID, or work ID. Verified badge in under 24 hours. Only real, identifiable people on the platform.</p>
+    </div>
+    <div class="step reveal d1">
+      <div class="step-num">2</div>
+      <h3>Browse or List</h3>
+      <p>Search by city, LGA, price range, and property type. Or post a room you found and need to split, or a space you already have. Filtered results. No noise.</p>
+    </div>
+    <div class="step reveal d2">
+      <div class="step-num">3</div>
+      <h3>Unlock & Connect</h3>
+      <p>Found your match? Pay ₦2000 to unlock their verified phone number and WhatsApp link. Direct. No middleman. The contact you reach is real and verified.</p>
+    </div>
+    <div class="step reveal d3">
+      <div class="step-num">4</div>
+      <h3>Move In. Review.</h3>
+      <p>Move in safely. After 30 days, leave a review. Every rating you give protects the next person who uses CitiMore. Trust builds trust.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── BEHAVIOURAL INSIGHT BUTTONS ──────────────────────────────────────── -->
+<section class="explore" id="explore">
+  <div class="section-hd">
+    <div class="label">Explore CitiMore</div>
+    <h2 class="display reveal">What are you <em>looking for?</em></h2>
+    <p class="body-lg reveal d1">
+      Every button below is a feature coming to CitiMore. Click what applies to your situation — it helps us build the right things first.
+    </p>
+  </div>
+
+  <div class="explore-intro reveal">
+    These features are in development. Clicking tells us exactly what matters to you — and gets you notified first when it goes live.
+  </div>
+
+  <div class="insight-grid">
+
+    <button class="insight-btn reveal" onclick="openModal('found-room')">
+      <div class="ib-inner">
+        <span class="ib-icon">🔍</span>
+        <div class="ib-title">I found a room — need someone to split with</div>
+        <div class="ib-body">Found a place you can't afford alone? Post it on CitiMore. Verified applicants come to you. You choose who moves in.</div>
+        <span class="ib-chip">Find a Roommate →</span>
+      </div>
+    </button>
+
+    <button class="insight-btn reveal d1" onclick="openModal('have-room')">
+      <div class="ib-inner">
+        <span class="ib-icon">🏠</span>
+        <div class="ib-title">I have a spare room — need a housemate</div>
+        <div class="ib-body">Already settled but have space to fill? List it, set your terms, and get applications from verified, compatible people only.</div>
+        <span class="ib-chip">List My Space →</span>
+      </div>
+    </button>
+
+    <button class="insight-btn reveal d2" onclick="openModal('find-place')">
+      <div class="ib-inner">
+        <span class="ib-icon">🗺️</span>
+        <div class="ib-title">I need to find a rental property</div>
+        <div class="ib-body">Browse verified agent and landlord listings by LGA and budget. No ghost numbers. Contacts are locked until you are ready to reach out.</div>
+        <span class="ib-chip">Browse Properties →</span>
+      </div>
+    </button>
+
+    <button class="insight-btn reveal" onclick="openModal('unlock')">
+      <div class="ib-inner">
+        <span class="ib-icon">🔓</span>
+        <div class="ib-title">Unlock a contact for ₦2000</div>
+        <div class="ib-body">Serious about a listing? Pay ₦2000 to instantly reveal the verified phone number and WhatsApp. The fee keeps fake enquiries out.</div>
+        <span class="ib-chip">Unlock Contact →</span>
+      </div>
+    </button>
+
+    <button class="insight-btn reveal d1" onclick="openModal('allaccess')">
+      <div class="ib-inner">
+        <span class="ib-icon">🎟️</span>
+        <div class="ib-title">All-Access Pass — ₦10,000 / month</div>
+        <div class="ib-body">Unlimited unlocks across all listings for 30 full days. Perfect when you just arrived and need to move fast across multiple options.</div>
+        <span class="ib-chip">Get All-Access →</span>
+      </div>
+    </button>
+
+    <button class="insight-btn reveal d2" onclick="openModal('boost')">
+      <div class="ib-inner">
+        <span class="ib-icon">🚀</span>
+        <div class="ib-title">Boost my listing to the top</div>
+        <div class="ib-body">Corps member, student, landlord or agent — pay ₦2,000–₦5,000 to pin your listing at the top of city results. Fill your space faster.</div>
+        <span class="ib-chip">Boost My Listing →</span>
+      </div>
+    </button>
+
+  </div>
+</section>
+
+<!-- ── AUDIENCE TABS ──────────────────────────────────────────────────────── -->
+<section class="audience">
+  <div class="section-hd">
+    <div class="label">Who CitiMore Is For</div>
+    <h2 class="display reveal">Built for <em>everyone</em><br>navigating Nigerian cities.</h2>
+  </div>
+
+  <div class="tabs" id="audience-tabs">
+    <button class="tab active" onclick="switchTab('corps')">Corps Members</button>
+    <button class="tab" onclick="switchTab('students')">Students</button>
+    <button class="tab" onclick="switchTab('pros')">Professionals</button>
+  </div>
+
+  <!-- Corps Members -->
+  <div class="tab-content active" id="tab-corps">
+    <div class="tab-text">
+      <div class="label">NYSC Corps Members</div>
+      <h3 class="display" style="font-size:clamp(1.6rem,3vw,2.3rem)">
+        21 days to find housing.<br><em>No local network.</em><br>No time to waste.
+      </h3>
+      <ul class="audience-points">
+        <li>Deployed to a city you have never lived in — CitiMore gives you verified listings on day one</li>
+        <li>Find a fellow corps member to split rent with before camp even ends</li>
+        <li>NYSC call-up letter verification builds instant trust between co-tenants</li>
+        <li>Filter by LGA proximity to your PPA so your commute does not destroy your allawee</li>
+      </ul>
+    </div>
+    <div class="tab-visual">
+      <h4>The corps member reality</h4>
+      <div class="stat-row">
+        <div class="stat-block">
+          <span class="stat-val">350,000+</span>
+          <div class="stat-lbl">Corps members deployed every year</div>
+        </div>
+        <div class="stat-block">
+          <span class="stat-val">₦70,000</span>
+          <div class="stat-lbl">Monthly allawee — housing eats most of it</div>
+        </div>
+        <div class="stat-block">
+          <span class="stat-val">21 Days</span>
+          <div class="stat-lbl">To find housing after camp ends</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Students -->
+  <div class="tab-content" id="tab-students">
+    <div class="tab-text">
+      <div class="label">University & Polytechnic Students</div>
+      <h3 class="display" style="font-size:clamp(1.6rem,3vw,2.3rem)">
+        Off-campus shouldn't mean<br><em>unsafe</em> or unaffordable.
+      </h3>
+      <ul class="audience-points">
+        <li>Browse verified listings near your institution — no more relying on seniors' outdated contacts</li>
+        <li>Find a coursemate or compatible stranger to split a decent place with</li>
+        <li>Student ID verification means everyone on the platform is who they say they are</li>
+        <li>Review your landlord so the next student doesn't make the same mistake you did</li>
+      </ul>
+    </div>
+    <div class="tab-visual">
+      <h4>The student housing reality</h4>
+      <div class="stat-row">
+        <div class="stat-block">
+          <span class="stat-val">1.8M+</span>
+          <div class="stat-lbl">Students seeking off-campus housing in Abuja region</div>
+        </div>
+        <div class="stat-block">
+          <span class="stat-val">40–60%</span>
+          <div class="stat-lbl">Cost savings when housing is shared</div>
+        </div>
+        <div class="stat-block">
+          <span class="stat-val">#1</span>
+          <div class="stat-lbl">Reason students drop out — unaffordable living costs</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Professionals -->
+  <div class="tab-content" id="tab-pros">
+    <div class="tab-text">
+      <div class="label">Young Professionals</div>
+      <h3 class="display" style="font-size:clamp(1.6rem,3vw,2.3rem)">
+        You earn more.<br>You still can't afford<br><em>Abuja alone.</em>
+      </h3>
+      <ul class="audience-points">
+        <li>Find an income-verified professional to share a quality apartment in a safe area</li>
+        <li>Lifestyle and schedule compatibility quiz — no more surprise mismatches</li>
+        <li>Browse premium shared apartments near your workplace</li>
+        <li>CitiMore Direct — managed properties with CitiMore-signed leases and zero inspection fee surprises</li>
+      </ul>
+    </div>
+    <div class="tab-visual">
+      <h4>The Abuja professional reality</h4>
+      <div class="stat-row">
+        <div class="stat-block">
+          <span class="stat-val">₦1.2M+</span>
+          <div class="stat-lbl">Average annual rent for a decent 2-bed in Abuja</div>
+        </div>
+        <div class="stat-block">
+          <span class="stat-val">2 Years</span>
+          <div class="stat-lbl">What most landlords demand upfront, in cash</div>
+        </div>
+        <div class="stat-block">
+          <span class="stat-val">50%</span>
+          <div class="stat-lbl">Cost savings when a 2-bed is split between two professionals</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SOCIAL PROOF ──────────────────────────────────────────────────────── -->
+<section class="proof">
+  <div class="section-hd" style="text-align:center">
+    <div class="label" style="text-align:center">What People Are Saying</div>
+    <h2 class="display reveal" style="margin:0 auto;max-width:580px">
+      The problem is <em>real.</em><br>People are tired.
+    </h2>
+  </div>
+
+  <div class="proof-grid">
+    <div class="proof-card reveal">
+      <div class="stars">★★★★★</div>
+      <p class="proof-quote">
+        I paid ₦40,000 to an agent in Abuja. He showed me the place, took the holding deposit, and that was the last I heard of him. CitiMore would have saved me that entire experience.
+      </p>
+      <div class="proof-person">
+        <div class="proof-avatar">AA</div>
+        <div>
+          <div class="proof-name">Amaka A.</div>
+          <div class="proof-info">NYSC Batch B · FCT</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="proof-card reveal d1">
+      <div class="stars">★★★★★</div>
+      <p class="proof-quote">
+        My landlord in Garki asked for 18 months upfront. I had just started my first job. I ended up in a place I couldn't afford alone and lived with three people I never screened. Never again.
+      </p>
+      <div class="proof-person">
+        <div class="proof-avatar">TO</div>
+        <div>
+          <div class="proof-name">Tunde O.</div>
+          <div class="proof-info">Software Developer · Abuja</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="proof-card reveal d2">
+      <div class="stars">★★★★★</div>
+      <p class="proof-quote">
+        The first time I moved to Abuja for school, I joined 5 different housing groups on Facebook. Not one listing was accurate. I moved 3 times in my first semester. This platform needs to exist.
+      </p>
+      <div class="proof-person">
+        <div class="proof-avatar">FI</div>
+        <div>
+          <div class="proof-name">Fatima I.</div>
+          <div class="proof-info">3rd Year Student · ABUAD</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── STATS ──────────────────────────────────────────────────────────── -->
+<div class="stats-band">
+  <div class="stats-grid">
+    <div class="stat-item reveal">
+      <span class="stat-big">₦120B+</span>
+      <div class="stat-label">Young Nigerian housing market annually</div>
+    </div>
+    <div class="stat-item reveal d1">
+      <span class="stat-big">21M+</span>
+      <div class="stat-label">Young Nigerians living in cities today</div>
+    </div>
+    <div class="stat-item reveal d2">
+      <span class="stat-big">2 Years</span>
+      <div class="stat-label">Upfront rent landlords demand in Abuja</div>
+    </div>
+    <div class="stat-item reveal d3">
+      <span class="stat-big">0</span>
+      <div class="stat-label">Trusted shared-housing platforms in Nigeria — until now</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── FOR AGENTS ──────────────────────────────────────────────────────── -->
+<section class="agents" id="for-agents">
+  <div class="agents-inner">
+    <div>
+      <div class="label">For Agents & Landlords</div>
+      <h2 class="display reveal">
+        Reach 21 million<br>tenants with<br><em>zero middlemen.</em>
+      </h2>
+      <p class="body-lg reveal d1">
+        CitiMore connects you directly with verified, serious young Nigerians who need housing right now. No commission splits. No time-wasters.
+      </p>
+      <div class="agent-benefits">
+        <div class="abenefit reveal d1">
+          <div class="abenefit-icon">🆓</div>
+          <div class="abenefit-text">
+            <h4>List for free — permanently</h4>
+            <p>Basic listings are always free. Post your property with photos and CitiMore puts it in front of the right people.</p>
+          </div>
+        </div>
+        <div class="abenefit reveal d2">
+          <div class="abenefit-icon">✅</div>
+          <div class="abenefit-text">
+            <h4>Verified tenants only</h4>
+            <p>Every enquiry comes from a person who passed CitiMore's identity check. No anonymous contacts. No ghost calls.</p>
+          </div>
+        </div>
+        <div class="abenefit reveal d3">
+          <div class="abenefit-icon">📊</div>
+          <div class="abenefit-text">
+            <h4>See your listing performance</h4>
+            <p>Track views, unlocks, and conversion rate from your agent dashboard. Know what is working.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="agent-cta-box reveal">
+      <h3>List your first property free</h3>
+      <p>Early agents who join the waitlist get 30 days of free featured placement when we launch — your listings appear above everyone else.</p>
+      <button class="btn-terra" onclick="openModal('agent')">
+        Reserve My Agent Spot →
+      </button>
+      <p style="margin-top:14px;font-size:.75rem;color:rgba(255,255,255,.4)">No credit card. No subscription required to start.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── WAITLIST ──────────────────────────────────────────────────────────── -->
+<section class="waitlist" id="waitlist">
+  <div class="waitlist-inner">
+    <div class="label">Join the Waitlist</div>
+    <h2>Be first when<br><em>CitiMore launches.</em></h2>
+    <p class="waitlist-sub">
+      Tell us your situation in 30 seconds and reserve your spot.
+      Priority access goes to the first 500 sign-ups — we are close.
+    </p>
+
+    <div id="wl-form">
+      <div class="seg-tabs">
+        <button class="seg-tab active" onclick="switchSeg('person')">I'm a Renter</button>
+        <button class="seg-tab" onclick="switchSeg('agent')">I'm an Agent / Landlord</button>
+      </div>
+
+      <!-- Renter flow -->
+      <div class="form-step active" id="seg-person">
+        <div class="form-q">Who are you?</div>
+        <div class="form-opts">
+          <button class="form-opt" onclick="selectOpt(this,'p-type')">Student</button>
+          <button class="form-opt" onclick="selectOpt(this,'p-type')">Young Professional</button>
+          <button class="form-opt" onclick="selectOpt(this,'p-type')">Corps Member</button>
+          <button class="form-opt" onclick="selectOpt(this,'p-type')">Other</button>
+        </div>
+
+        <div class="form-q">What city are you in or moving to?</div>
+        <select class="state-sel" id="person-state">
+          <option value="">Select a city / state…</option>
+          <option>FCT — Abuja</option><option>Lagos</option><option>Rivers — Port Harcourt</option>
+          <option>Kano</option><option>Oyo — Ibadan</option><option>Enugu</option>
+          <option>Anambra</option><option>Delta</option><option>Kaduna</option><option>Other</option>
+        </select>
+
+        <div class="form-q">What is your housing situation right now?</div>
+        <div class="form-opts">
+          <button class="form-opt" onclick="selectOpt(this,'p-housing')">I need a room urgently</button>
+          <button class="form-opt" onclick="selectOpt(this,'p-housing')">I found a place, need to split it</button>
+          <button class="form-opt" onclick="selectOpt(this,'p-housing')">I have a room, need a housemate</button>
+          <button class="form-opt" onclick="selectOpt(this,'p-housing')">Just exploring for now</button>
+        </div>
+
+        <div class="email-row">
+          <input type="email" class="email-inp" id="person-email" placeholder="Your email address…"/>
+          <button class="submit-btn" onclick="submitWL('person')">Reserve My Spot →</button>
+        </div>
+      </div>
+
+      <!-- Agent flow -->
+      <div class="form-step" id="seg-agent">
+        <div class="form-q">Are you an agent or private landlord?</div>
+        <div class="form-opts">
+          <button class="form-opt" onclick="selectOpt(this,'a-type')">Estate Agent</button>
+          <button class="form-opt" onclick="selectOpt(this,'a-type')">Private Landlord</button>
+          <button class="form-opt" onclick="selectOpt(this,'a-type')">Both</button>
+        </div>
+
+        <div class="form-q">Where are your properties?</div>
+        <select class="state-sel" id="agent-state">
+          <option value="">Select primary city / state…</option>
+          <option>FCT — Abuja</option><option>Lagos</option>
+          <option>Port Harcourt</option><option>Kano</option><option>Other</option>
+        </select>
+
+        <div class="form-q">How many properties do you currently have available?</div>
+        <div class="form-opts">
+          <button class="form-opt" onclick="selectOpt(this,'a-count')">1–2</button>
+          <button class="form-opt" onclick="selectOpt(this,'a-count')">3–5</button>
+          <button class="form-opt" onclick="selectOpt(this,'a-count')">6–10</button>
+          <button class="form-opt" onclick="selectOpt(this,'a-count')">10+</button>
+        </div>
+
+        <div class="email-row">
+          <input type="email" class="email-inp" id="agent-email" placeholder="Your email address…"/>
+          <button class="submit-btn" onclick="submitWL('agent')">List My Properties First →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Success state -->
+    <div class="success-state" id="wl-success">
+      <div style="font-size:2.4rem">🎉</div>
+      <h3>You're in!</h3>
+      <p>Your spot is saved. You will be among the first to access CitiMore when we launch. Watch this space.</p>
+      <button class="wa-share" onclick="shareWA()">
+        📤 Share with someone who needs this
+      </button>
+    </div>
+
+    <div class="waitlist-count">
+      <div class="count-pulse"></div>
+      <span><span class="count-num" id="wl-count">412</span> people are already waiting</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ──────────────────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="foot-brand"><span class="c">Citi</span><span class="m">More</span></div>
+      <p class="foot-tagline">
+        Nigeria's trusted shared housing and rental platform for
+        students, professionals, and corps members.
+        Safe. Verified. Yours.
+      </p>
+      <div class="foot-social">
+        <a href="#" class="soc">TK</a>
+        <a href="#" class="soc">IG</a>
+        <a href="#" class="soc">LI</a>
+        <a href="#" class="soc">X</a>
+        <a href="#" class="soc">WA</a>
+      </div>
+    </div>
+    <div class="foot-col">
+      <h4>PLATFORM</h4>
+      <a href="#how-it-works">How It Works</a>
+      <a href="#explore">Find a Roommate</a>
+      <a href="#explore">Browse Properties</a>
+      <a href="#for-agents">For Agents</a>
+      <a href="#waitlist">Join Waitlist</a>
+    </div>
+    <div class="foot-col">
+      <h4>COMPANY</h4>
+      <a href="#">Our Story</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Use</a>
+      <a href="#">NDPR Compliance</a>
+      <a href="#">hello@citimore.ng</a>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <p class="foot-copy">© 2025 CitiMore. Built for every young Nigerian navigating city life.</p>
+    <div class="foot-legal">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ── STICKY BAR ──────────────────────────────────────────────────────── -->
+<div class="sticky-bar" id="sticky">
+  <p>🏙️ <strong>CitiMore is almost ready.</strong> <span id="sticky-count">412</span> people are waiting.</p>
+  <button class="sticky-cta" onclick="document.getElementById('waitlist').scrollIntoView({behavior:'smooth'})">
+    Get Early Access →
+  </button>
+</div>
+
+<!-- ── MODAL ──────────────────────────────────────────────────────────── -->
+<div class="modal-bg" id="modal" onclick="closeBg(event)">
+  <div class="modal">
+    <button class="modal-x" onclick="closeModal()">✕</button>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+// ── Scroll reveal
+const reveals = document.querySelectorAll('.reveal');
+const ro = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in') });
+},{threshold:.1});
+reveals.forEach(el=>ro.observe(el));
+
+// ── Sticky bar
+window.addEventListener('scroll',()=>{
+  document.getElementById('sticky').classList.toggle('show',window.scrollY>600);
+});
+
+// ── Waitlist segmented tabs
+function switchSeg(type){
+  document.querySelectorAll('.seg-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.form-step').forEach(s=>s.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  document.getElementById('seg-'+type).classList.add('active');
+}
+
+// ── Option select
+function selectOpt(el,grp){
+  document.querySelectorAll(`[onclick*="${grp}"]`).forEach(b=>b.classList.remove('sel'));
+  el.classList.add('sel');
+}
+
+// ── Audience tabs
+function switchTab(id){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  document.getElementById('tab-'+id).classList.add('active');
+}
+
+// ── Waitlist submit
+// ⚠️  PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE (see SHEETS_SETUP.md)
+const WAITLIST_ENDPOINT = 'https://script.google.com/macros/s/AKfycbwEPOn4ScnxT6l3kPoaVE2ZRM1zAYfBySlDPcEziUfiuliyCxukA0XwERxx6Vn_xrPf/exec';
+
+let count = 412;
+
+function getSel(grp){
+  const el = document.querySelector(`.form-opt.sel[onclick*="${grp}"]`);
+  return el ? el.textContent.trim() : '';
+}
+
+async function submitWL(type){
+  const emailEl = document.getElementById(type==='person'?'person-email':'agent-email');
+  const btnEl   = emailEl.parentElement.querySelector('.submit-btn');
+  const email   = emailEl.value.trim();
+
+  // basic email sanity
+  if(!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    emailEl.style.borderColor='rgba(192,94,58,.8)';
+    emailEl.placeholder='Please enter a valid email ↑';
+    setTimeout(()=>{emailEl.style.borderColor='';emailEl.placeholder='Your email address…';},2500);
+    return;
+  }
+
+  // collect payload
+  const payload = type === 'person'
+    ? {
+        type:       'person',
+        role:       getSel('p-type'),
+        city:       document.getElementById('person-state').value || '',
+        housing:    getSel('p-housing'),
+        email,
+        source:     document.referrer || 'direct',
+        page:       location.href,
+        submittedAt: new Date().toISOString()
+      }
+    : {
+        type:       'agent',
+        role:       getSel('a-type'),
+        city:       document.getElementById('agent-state').value || '',
+        properties: getSel('a-count'),
+        email,
+        source:     document.referrer || 'direct',
+        page:       location.href,
+        submittedAt: new Date().toISOString()
+      };
+
+  // UI: loading state
+  const origText = btnEl ? btnEl.textContent : '';
+  if(btnEl){ btnEl.disabled = true; btnEl.textContent = 'Reserving your spot…'; }
+
+  try {
+    // Apps Script accepts url-encoded POST without triggering a CORS preflight.
+    const body = new URLSearchParams();
+    Object.entries(payload).forEach(([k,v]) => body.append(k, v ?? ''));
+
+    const res = await fetch(WAITLIST_ENDPOINT, { method: 'POST', body });
+    // Apps Script may respond opaquely depending on deployment; treat network success as success.
+    if(!res.ok && res.type !== 'opaque') throw new Error('HTTP ' + res.status);
+
+    // success UI
+    count++;
+    document.getElementById('wl-count').textContent    = count;
+    document.getElementById('hero-count').textContent  = count;
+    document.getElementById('sticky-count').textContent= count;
+    document.getElementById('wl-form').style.display   = 'none';
+    document.getElementById('wl-success').style.display= 'block';
+  } catch (err) {
+    console.error('[CitiMore Waitlist] submit failed', err);
+    if(btnEl){ btnEl.disabled = false; btnEl.textContent = origText; }
+    emailEl.style.borderColor = 'rgba(192,94,58,.8)';
+    emailEl.placeholder = 'Network error — please try again';
+    setTimeout(()=>{ emailEl.style.borderColor=''; emailEl.placeholder='Your email address…'; }, 3000);
+  }
+}
+
+// ── WhatsApp share
+function shareWA(){
+  const msg=encodeURIComponent("I just joined the CitiMore waitlist 🏠\n\nIf you're looking for housing in Abuja or a trustworthy person to split rent with — this is the platform we've been waiting for.\n\nJoin here: https://citimore.ng");
+  window.open('https://api.whatsapp.com/send?text='+msg,'_blank');
+}
+
+// ── Modal data
+const modals={
+  'found-room':{emoji:'🔍',title:'Find a Roommate',body:'You found a room you cannot afford alone. Post it on CitiMore, set your share of the rent, and receive applications from verified people who want to move in with you. You control who you accept.'},
+  'have-room':{emoji:'🏠',title:'List Your Space',body:'You have a spare room or spare bed. Set your house rules, preferred profile, and price. CitiMore sends you applications from verified, compatible people only. No random strangers.'},
+  'find-place':{emoji:'🗺️',title:'Browse Properties',body:'Search verified agent and landlord listings by city, LGA, and budget. Photos and prices are public. Contact details are locked — pay ₦2000 to unlock a listing you are serious about. No more ghost agents.'},
+  'unlock':{emoji:'🔓',title:'Pay ₦2000 to Unlock',body:'The ₦2000 unlock fee is not just revenue — it is a filter. Only serious people pay it, which means the person on the other end knows you mean business. One unlock. One verified contact. Direct communication.'},
+  'allaccess':{emoji:'🎟️',title:'All-Access Pass — ₦10,000/month',body:'Unlimited unlocks across all listings — roommates and agents — for 30 full days. Perfect for corps members in their first weeks of camp, students moving near a new campus, or anyone who needs to compare multiple options fast.'},
+  'boost':{emoji:'🚀',title:'Boost Your Listing',body:'Pay ₦2,000–₦5,000 to pin your listing to the top of city search results for 7 or 14 days. Ideal for agents, landlords, or anyone who needs their space filled quickly.'},
+  'agent':{emoji:'🏢',title:'List Your Property Free',body:'Join CitiMore as a verified agent or landlord. Free to list. Verified tenants only. Early agents who join the waitlist now get 30 days of free featured placement when we launch — your listings appear above everyone else.'},
+};
+
+function openModal(id){
+  const m=modals[id];if(!m)return;
+  document.getElementById('modal-body').innerHTML=`
+    <span class="modal-em">${m.emoji}</span>
+    <h3>${m.title}</h3>
+    <p>${m.body}</p>
+    <button class="modal-action" onclick="closeModal();document.getElementById('waitlist').scrollIntoView({behavior:'smooth'})">${id==='agent'?'Reserve My Agent Spot →':'Join Waitlist to Be First →'}</button>
+    <p class="modal-note">Free to join. No card needed.</p>
+  `;
+  document.getElementById('modal').classList.add('on');
+  document.body.style.overflow='hidden';
+  console.log('[CitiMore Behaviour Click]',id);
+}
+function closeModal(){
+  document.getElementById('modal').classList.remove('on');
+  document.body.style.overflow='';
+}
+function closeBg(e){if(e.target===document.getElementById('modal'))closeModal();}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+</script>
+</body>
+</html>
